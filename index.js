@@ -16,8 +16,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 mongoose.connect(
-  "mongodb+srv://rudrakshnile:nilerudra064@cluster0.caaeero.mongodb.net/user",
-  { useNewUrlParser: true, useUnifiedTopology: true }
+  "mongodb+srv://rudrakshnile:nilerudra064@cluster0.caaeero.mongodb.net/user"
 );
 
 app.post("/users/register", async (req, res) => {
@@ -49,16 +48,15 @@ app.post("/users/login", async (req, res) => {
 });
 
 app.post("/users/forgot-password", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, newpassword } = req.body;
   const user = await User.findOne({ username });
-  const newPassword = req.headers.newpassword;
 
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
-  if (user && user.password === password) {
-    user.password = newPassword;
+  if (user.password === password) {
+    user.password = newpassword;
     await user.save();
     return res.status(200).json({ message: "Password Updated Successfully" });
   } else {
